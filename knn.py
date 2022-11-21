@@ -29,7 +29,7 @@ if __name__ == '__main__':
     X = np.random.random((n,d))
     Y = np.random.randint(2, size=n)
     Z = np.random.random((m, d))
-    model = KNN(X, Y, k)
+    model = MyKNN(X, Y, k)
     labels = model.predict(Z)
     print(labels)
     model_ref = KNeighborsClassifier(n_neighbors=k)
