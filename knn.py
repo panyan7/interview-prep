@@ -3,7 +3,7 @@ from collections import Counter
 from sklearn.neighbors import KNeighborsClassifier
 
 
-class KNN:
+class MyKNN:
     def __init__(self, X, Y, k):
         self.X = X
         self.Y = Y
