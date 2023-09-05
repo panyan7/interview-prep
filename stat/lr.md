@@ -49,11 +49,15 @@ If we use Ridge regression, the bias is $\hat{\beta}^{\rm ridge} - \hat{\beta}$.
 
 ## Dependent Features
 
+### PCA
+
 If the features are not linearly independent, there can be multiple expressions for $\hat{\beta}$. One possible way is to solve for the Moore-Penrose pseudo-inverse $X^-$ of $X$, computed by inverting the singular values in SVD, and we can let
 $$
 \hat{\beta} = X^- y
 $$
 This is the coefficient with the minimum norm. If the collinearity is just high, this is quite similar to using principle component analysis.
+
+### Ridge Regression
 
 Or, we could use Ridge regression. The matrix $X^\top X + \lambda I$ is always invertible, since for any non-zero vector $v$,
 $$
@@ -63,16 +67,20 @@ Hence $X^\top X + \lambda I$ is positive-definite and has positive eigenvalues, 
 
 In general, when there are highly collinear features, it might cause the matrix to be ill-conditioned, that the condition number $\kappa(X^\top X) = \frac{\lambda_{\max}(X^\top X)}{\lambda_{\min}(X^\top X)}$ is huge, and the model will be very sensitive to noise. We should select features carefully to avoid.
 
+### Lasso Regression
+
+
+
 ## $R^2$
 
 For simple linear regression, $R^2$ equals $\mathrm{corr}(x, y)$.
 
 ## Problems
 
-1. If $y \sim \beta_1 x_1 + \varepsilon_1$ and $y \sim \beta_2 x_2 + \varepsilon_2$, each with $R^2$ of $R_1^2$ and $R_2^2$, then what is the range of $R^2$ for $y \sim \beta_3 x_1 + \beta_4 x_2 + \varepsilon$?
+1. If we fit $y \sim \beta_1 x_1 + \varepsilon_1$ with $R^2$ of $R_1^2$ and $y \sim \beta_2 x_2 + \varepsilon_2$ with $R^2$ of $R_2^2$, then what is the range of $R^2$ for $y \sim \beta_3 x_1 + \beta_4 x_2 + \varepsilon$?
 
    The range is $\max(R_1^2, R_2^2) \le R^2 \le 1$. The minimum can be achieved when $x_1 = x_2$, or say $x_1 = x_2 + x_3$, where $x_2 \perp x_3$, so $x_3$ is in $\varepsilon_2$ when fitting only using $x_2$.
 
    The maximum can be achieved when $y = \beta_1 x_1 + \beta_2 x_2$. Notice that this can happen even if $R_1^2 + R_2^2 < 1$, specifically when the correlation between $x_1$ and $x_2$ is very negative.
 
-2.
+2. If linear regression
