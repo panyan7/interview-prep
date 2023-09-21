@@ -83,4 +83,8 @@ For simple linear regression, $R^2$ equals $\mathrm{corr}(x, y)$.
 
    The maximum can be achieved when $y = \beta_1 x_1 + \beta_2 x_2$. Notice that this can happen even if $R_1^2 + R_2^2 < 1$, specifically when the correlation between $x_1$ and $x_2$ is very negative.
 
-2. If linear regression
+2. $x_1$ and $x_2$ are zero-mean and uncorrelated. Consider the two ways of fitting a linear regression: fit $y \sim \beta_1 x_1 + \beta_2 x_2 + \varepsilon$; or fit $y \sim \beta_1' x_1 + r$, then fit $r \sim \beta_2' x_2 + \varepsilon$. What is the relationship between the coefficients?
+
+   If we fit together, we have $X^\top X$ is a diagonal matrix of the variances since $x_1,x_2$ uncorrelated, so the fitted $\beta_1 = \frac{\mathrm{Cov}(x_1, y)}{\mathrm{Var}(x_1)}$ and $\beta_2 = \frac{\mathrm{Cov}(x_2, y)}{\mathrm{Var}(x_2)}$. If we fit separately, clearly $\beta_1' = \beta_1$. Then $\beta_2' = \frac{\mathrm{Cov}(x_2, r)}{\mathrm{Var}(x_2)} = \frac{\mathrm{Cov}(x_2, y - \beta_1'x_1)}{\mathrm{Var}(x_2)} = \frac{\mathrm{Cov}(x_2, y) - \beta_1'\mathrm{Cov}(x_2, x_1)}{\mathrm{Var}(x_2)} = \beta_2$. Hence the coefficients will be the same.
+
+3. 
