@@ -2,7 +2,7 @@
 
 
 class String {
-    char *data;
+    char* data;
     size_t str_len = 0;
     size_t max_len = 1;
 public:
@@ -14,7 +14,7 @@ public:
     void push_back(char c);
     char pop_back();
     size_t size() { return str_len; }
-    friend std::ostream &operator<<(std::ostream &os, const String &s) {
+    friend std::ostream &operator<<(std::ostream& os, const String& s) {
         os << std::string(s.data);
         return os;
     }
