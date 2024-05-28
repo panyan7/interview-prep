@@ -4,45 +4,31 @@
 
 ## Least-Squares Estimate
 
-Given $X \in \mathbb{R}^{n \times d}$ and $y \in \R^n$, find $\beta = \arg\min_{\beta \in \R^d} \|X\beta - y\|^2$.
+Given $X \in \mathbb{R}^{n \times d}$ and $y \in \mathbb{R}^n$, find $\beta = \arg\min_{\beta \in \mathbb{R}^d} \|X\beta - y\|^2$.
 
 If the features of $X$ are linearly independent, meaning that $X$ has rank $d$, then the closed form formula for $\hat{\beta}$ is
-$$
-\hat{\beta} = (X^\top X)^{-1}X^\top y.
-$$
-For Ridge regression, the objective is $\beta = \arg\min_{\beta \in \R^d} \|X\beta-y\|^2 + \lambda \|\beta\|^2$, and the closed form formula is
-$$
-\hat{\beta}^{\rm ridge} = (X^\top X + \lambda I)^{-1} X^\top y = X^\top (XX^\top + \lambda I)^{-1} y.
-$$
+$$\hat{\beta} = (X^\top X)^{-1}X^\top y.$$
+For Ridge regression, the objective is $\beta = \arg\min_{\beta \in \mathbb{R}^d} \|X\beta-y\|^2 + \lambda \|\beta\|^2$, and the closed form formula is
+$$\hat{\beta}^{\rm ridge} = (X^\top X + \lambda I)^{-1} X^\top y = X^\top (XX^\top + \lambda I)^{-1} y.$$
 
 Least-squares is the maximum likelihood estimator if we assume the errors follow a Gaussian distribution.
 
 ## Maximum Likelihood Estimation
 
 Assume that the error terms are $\varepsilon \sim \mathcal{N}(X\beta, \sigma^2 I)$, we have
-$$
-\mathcal{L}(\beta; Y) = \frac{1}{\sqrt{2\pi}^n \sigma^n} \exp\left(-\frac{1}{2\sigma^2}(Y-X\beta)^\top (Y - X\beta)\right).
-$$
+$$\mathcal{L}(\beta; Y) = \frac{1}{\sqrt{2\pi}^n \sigma^n} \exp\left(-\frac{1}{2\sigma^2}(Y-X\beta)^\top (Y - X\beta)\right).$$
 So
-$$
-\log \mathcal{L}(\beta; Y) = -\frac{n}{2}\log(2\pi) - n \log \sigma - \frac{1}{2\sigma^2}(Y - X\beta)^\top(Y - X\beta)
-$$
+$$\log \mathcal{L}(\beta; Y) = -\frac{n}{2}\log(2\pi) - n \log \sigma - \frac{1}{2\sigma^2}(Y - X\beta)^\top(Y - X\beta)$$
 and
-$$
-\frac{\partial}{\partial \beta} \log \mathcal{L}(\beta; Y) = \frac{1}{\sigma^2}(X^\top Y - X^\top X \beta) = 0
-$$
+$$\frac{\partial}{\partial \beta} \log \mathcal{L}(\beta; Y) = \frac{1}{\sigma^2}(X^\top Y - X^\top X \beta) = 0$$
 so we have the maximum likelihood estimator
-$$
-\beta = (X^\top X)^{-1} X^\top Y.
-$$
+$$\beta = (X^\top X)^{-1} X^\top Y.$$
 If the errors are not normally distributed, we should probably be better by using differerent loss functions. For example, if the errors have heavy-tails, we should use robust regression techniques.
 
 ## Bias-Variance Tradeoff
 
 We know that
-$$
-\mathrm{MSE} = \mathrm{bias}^2 + \mathrm{variance}.
-$$
+$$\mathrm{MSE} = \mathrm{bias}^2 + \mathrm{variance}.$$
 The classical linear regression solution (1) has no bias, and the MSE is the variance of (1).
 
 If we use Ridge regression, the bias is $\hat{\beta}^{\rm ridge} - \hat{\beta}$. However, the variance of $\hat{\beta}^{\rm ridge}$ is always less than $\hat{\beta}$.
@@ -52,17 +38,13 @@ If we use Ridge regression, the bias is $\hat{\beta}^{\rm ridge} - \hat{\beta}$.
 ### PCA
 
 If the features are not linearly independent, there can be multiple expressions for $\hat{\beta}$. One possible way is to solve for the Moore-Penrose pseudo-inverse $X^-$ of $X$, computed by inverting the singular values in SVD, and we can let
-$$
-\hat{\beta} = X^- y
-$$
+$$\hat{\beta} = X^- y$$
 This is the coefficient with the minimum norm. If the collinearity is just high, this is quite similar to using principle component analysis.
 
 ### Ridge Regression
 
 Or, we could use Ridge regression. The matrix $X^\top X + \lambda I$ is always invertible, since for any non-zero vector $v$,
-$$
-v^\top (X^\top X + \lambda I)v = \|Xv\|^2 + \lambda \|v\|^2 > 0.
-$$
+$$v^\top (X^\top X + \lambda I)v = \|Xv\|^2 + \lambda \|v\|^2 > 0.$$
 Hence $X^\top X + \lambda I$ is positive-definite and has positive eigenvalues, so it is invertible.
 
 In general, when there are highly collinear features, it might cause the matrix to be ill-conditioned, that the condition number $\kappa(X^\top X) = \frac{\lambda_{\max}(X^\top X)}{\lambda_{\min}(X^\top X)}$ is huge, and the model will be very sensitive to noise. We should select features carefully to avoid.
@@ -87,4 +69,3 @@ For simple linear regression, $R^2$ equals $\mathrm{corr}(x, y)$.
 
    If we fit together, we have $X^\top X$ is a diagonal matrix of the variances since $x_1,x_2$ uncorrelated, so the fitted $\beta_1 = \frac{\mathrm{Cov}(x_1, y)}{\mathrm{Var}(x_1)}$ and $\beta_2 = \frac{\mathrm{Cov}(x_2, y)}{\mathrm{Var}(x_2)}$. If we fit separately, clearly $\beta_1' = \beta_1$. Then $\beta_2' = \frac{\mathrm{Cov}(x_2, r)}{\mathrm{Var}(x_2)} = \frac{\mathrm{Cov}(x_2, y - \beta_1'x_1)}{\mathrm{Var}(x_2)} = \frac{\mathrm{Cov}(x_2, y) - \beta_1'\mathrm{Cov}(x_2, x_1)}{\mathrm{Var}(x_2)} = \beta_2$. Hence the coefficients will be the same.
 
-3. 
