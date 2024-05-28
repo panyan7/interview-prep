@@ -4,11 +4,11 @@
 
 ## Least-Squares Estimate
 
-Given $X \in \mathbb{R}^{n \times d}$ and $y \in \mathbb{R}^n$, find $\beta = \arg\min_{\beta \in \mathbb{R}^d} \|X\beta - y\|^2$.
+Given $X \in \mathbb{R}^{n \times d}$ and $y \in \mathbb{R}^n$, find $\beta = \arg\min_{\beta \in \mathbb{R}^d} \lVert X\beta - y\rVert^2$.
 
 If the features of $X$ are linearly independent, meaning that $X$ has rank $d$, then the closed form formula for $\hat{\beta}$ is
 $$\hat{\beta} = (X^\top X)^{-1}X^\top y.$$
-For Ridge regression, the objective is $\beta = \arg\min_{\beta \in \mathbb{R}^d} \|X\beta-y\|^2 + \lambda \|\beta\|^2$, and the closed form formula is
+For Ridge regression, the objective is $\beta = \arg\min_{\beta \in \mathbb{R}^d} \lVert X\beta-y\rVert^2 + \lambda \lVert\beta\rVert^2$, and the closed form formula is
 $$\hat{\beta}^{\rm ridge} = (X^\top X + \lambda I)^{-1} X^\top y = X^\top (XX^\top + \lambda I)^{-1} y.$$
 
 Least-squares is the maximum likelihood estimator if we assume the errors follow a Gaussian distribution.
@@ -16,14 +16,24 @@ Least-squares is the maximum likelihood estimator if we assume the errors follow
 ## Maximum Likelihood Estimation
 
 Assume that the error terms are $\varepsilon \sim \mathcal{N}(X\beta, \sigma^2 I)$, we have
-$$\mathcal{L}(\beta; Y) = \frac{1}{\sqrt{2\pi}^n \sigma^n} \exp\left(-\frac{1}{2\sigma^2}(Y-X\beta)^\top (Y - X\beta)\right).$$
+$$\mathcal{L}(\beta) = \frac{1}{\sqrt{2\pi}^n \sigma^n} \exp\left(-\frac{1}{2\sigma^2}(y-X\beta)^\top (y - X\beta)\right).$$
 So
-$$\log \mathcal{L}(\beta; Y) = -\frac{n}{2}\log(2\pi) - n \log \sigma - \frac{1}{2\sigma^2}(Y - X\beta)^\top(Y - X\beta)$$
+$$\log \mathcal{L}(\beta) = \mathsf{const} - \frac{1}{2\sigma^2}(y - X\beta)^\top(y - X\beta)$$
 and
-$$\frac{\partial}{\partial \beta} \log \mathcal{L}(\beta; Y) = \frac{1}{\sigma^2}(X^\top Y - X^\top X \beta) = 0$$
-so we have the maximum likelihood estimator
-$$\beta = (X^\top X)^{-1} X^\top Y.$$
+$$\frac{\partial}{\partial \beta} \log \mathcal{L}(\beta) = \frac{1}{\sigma^2}(X^\top y - X^\top X \beta) = 0$$
+so if the $X^\top X$ matrix is invertible, we have the maximum likelihood estimator
+$$\beta = (X^\top X)^{-1} X^\top y.$$
 If the errors are not normally distributed, we should probably be better by using differerent loss functions. For example, if the errors have heavy-tails, we should use robust regression techniques.
+
+## Maximum A Posterior 
+If we assume that the coefficients follow a normal distribution $\beta \sim \mathcal{N}(0, \gamma^2I)$, then the maximum a posterior estimate of 
+$$\mathcal{L}(\beta) = \frac{1}{\sqrt{2\pi}^n \sigma^n} \exp\left(-\frac{1}{2\sigma^2}(y-X\beta)^\top (y - X\beta)\right) \cdot \frac{1}{\sqrt{2\pi} \gamma} \exp\left(-\frac{\lVert\beta\rVert^2}{2\gamma^2}\right)$$
+$$\log \mathcal{L}(\beta) = \mathsf{const} - \frac{1}{2\sigma^2}(y - X\beta)^\top(y - X\beta) - \frac{\lVert\beta\rVert^2}{2\gamma^2}$$
+$$\frac{\partial}{\partial \beta} \log \mathcal{L}(\beta) = \frac{1}{\sigma^2}(X^\top y - X^\top X \beta) - \frac{\beta}{\gamma^2} = \frac{1}{\sigma^2}\left(X^\top y - X^\top X \beta - \frac{\sigma^2}{\gamma^2} \beta\right).$$
+Let $\lambda = \frac{\sigma^2}{\gamma^2}$, we have the maximum a posterior estimator
+$$\beta = (X^\top X + \lambda I)^{-1}X^\top y.$$
+
+This corresponds to the Ridge regression estimator, where a penalty of $\lambda\lVert\beta\rVert^2$ is added to the least squares estimate.
 
 ## Bias-Variance Tradeoff
 
@@ -44,14 +54,12 @@ This is the coefficient with the minimum norm. If the collinearity is just high,
 ### Ridge Regression
 
 Or, we could use Ridge regression. The matrix $X^\top X + \lambda I$ is always invertible, since for any non-zero vector $v$,
-$$v^\top (X^\top X + \lambda I)v = \|Xv\|^2 + \lambda \|v\|^2 > 0.$$
+$$v^\top (X^\top X + \lambda I)v = \lVert Xv\rVert^2 + \lambda \lVert v\rVert^2 > 0.$$
 Hence $X^\top X + \lambda I$ is positive-definite and has positive eigenvalues, so it is invertible.
 
 In general, when there are highly collinear features, it might cause the matrix to be ill-conditioned, that the condition number $\kappa(X^\top X) = \frac{\lambda_{\max}(X^\top X)}{\lambda_{\min}(X^\top X)}$ is huge, and the model will be very sensitive to noise. We should select features carefully to avoid.
 
 ### Lasso Regression
-
-
 
 ## $R^2$
 
